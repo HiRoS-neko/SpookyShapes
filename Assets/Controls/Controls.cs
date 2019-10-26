@@ -52,7 +52,7 @@ public class Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Aim"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""d101a611-ff3c-4b09-a332-9f1ad6dce834"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
