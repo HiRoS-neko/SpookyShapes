@@ -64,8 +64,11 @@ namespace Character
             {
                 canJump = State.OnGround;
             }
-            else
+            else if (canJump == State.OnGround)
+            {
                 canJump = State.JumpedOnce;
+            }
+                
 
             switch (canJump)
             {
@@ -99,6 +102,8 @@ namespace Character
         {
             //if (rgd.velocity.magnitude < maxSpeed)
             var vel = rgd.velocity;
+
+            if (movement.x !=0) transform.localScale = new Vector3( Mathf.Sign(movement.x),2,1);
 
             if (Mathf.Abs((vel + movement * movementSpeed).x) < maxSpeed) //less then max speed, just add it
                 vel += movement * movementSpeed;
