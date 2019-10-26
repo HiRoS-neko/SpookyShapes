@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -127,16 +127,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2359476915765038162, guid: a62a1abd255491441a82ab6cd6f7d54c,
-        type: 3}
-      propertyPath: text
-      value: 
-      objectReference: {fileID: 2800000, guid: d433b36855de90349ae11b2bc7570714, type: 3}
     - target: {fileID: 3373571035609997005, guid: a62a1abd255491441a82ab6cd6f7d54c,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 2359476915765038162, guid: a62a1abd255491441a82ab6cd6f7d54c,
+        type: 3}
+      propertyPath: text
+      value: 
+      objectReference: {fileID: 2800000, guid: d433b36855de90349ae11b2bc7570714, type: 3}
     - target: {fileID: 4826126009379429325, guid: a62a1abd255491441a82ab6cd6f7d54c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -197,6 +197,12 @@ PrefabInstance:
 --- !u!1 &155462740 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3373571035609997005, guid: a62a1abd255491441a82ab6cd6f7d54c,
+    type: 3}
+  m_PrefabInstance: {fileID: 155462739}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &155462741 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4826126009379429325, guid: a62a1abd255491441a82ab6cd6f7d54c,
     type: 3}
   m_PrefabInstance: {fileID: 155462739}
   m_PrefabAsset: {fileID: 0}
@@ -404,6 +410,7 @@ GameObject:
   - component: {fileID: 1944745665}
   - component: {fileID: 1944745664}
   - component: {fileID: 1944745663}
+  - component: {fileID: 1944745666}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -476,6 +483,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1944745666
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1944745662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d98101e1b58976741b6e0e272ff66c85, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 155462741}
+  delay: 100
 --- !u!1 &1991167950
 GameObject:
   m_ObjectHideFlags: 0
