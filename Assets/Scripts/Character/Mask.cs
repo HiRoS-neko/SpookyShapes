@@ -26,10 +26,9 @@ namespace Character
             controls.Player.Jump.performed += JumpOnPerformed;
             controls.Player.Attack.performed += AttackOnPerformed;
 
-            controls.Player.Aim.performed += AimOnPerformed;
         }
 
-        private void AimOnPerformed(InputAction.CallbackContext obj)
+        private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
             var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
@@ -37,6 +36,7 @@ namespace Character
             var direction = (mousePos - playerPos).normalized;
 
             var notCollided = true;
+            var reflected = false;
             line.positionCount = 0;
             var newPosition = transform.position;
             var velocity = throwForce * direction;
@@ -55,15 +55,16 @@ namespace Character
                 newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
+                if (line.positionCount > 50 || reflected) notCollided = false;
+                
                 RaycastHit2D hit = Physics2D.Raycast(oldPosition, dir,
                     (velocity.magnitude * Time.fixedDeltaTime), 1 << 9);
                 if (hit.collider != null)
                 {
-                    newPosition = hit.point - velocity.normalized*0.001f;
+                    newPosition = hit.point - velocity.normalized * 0.001f;
                     velocity = Vector2.Reflect(dir, hit.normal) * velocity.magnitude;
+                    reflected = true;
                 }
-
-                if (line.positionCount > 50) notCollided = false;
             } while (notCollided);
         }
 
@@ -82,6 +83,7 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
+            rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
         }
@@ -102,6 +104,11 @@ namespace Character
                 if (currentlyControlling != null)
                 {
                     currentlyControlling.Move(new Vector2(movement, 0));
+                }
+
+                if (controls.Player.Aim.triggered)
+                {
+                    AimOnPerformed();
                 }
             }
         }

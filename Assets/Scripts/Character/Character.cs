@@ -81,8 +81,8 @@ namespace Character
                     canJump = State.JumpedOnce;
                     break;
                 case State.JumpedOnce:
-                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-                    canJump = State.JumpedTwice;
+                    //rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                    //canJump = State.JumpedTwice;
                     break;
                 case State.JumpedTwice:
                     break;
