@@ -195,6 +195,11 @@ PrefabInstance:
       propertyPath: currentlyControlling
       value: 
       objectReference: {fileID: 2359476915765038162}
+    - target: {fileID: 4634354715809561650, guid: c372626ecbecdd24885eaabf25c36e5d,
+        type: 3}
+      propertyPath: throwForce
+      value: 20
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c372626ecbecdd24885eaabf25c36e5d, type: 3}
 --- !u!4 &4634354714118057970 stripped

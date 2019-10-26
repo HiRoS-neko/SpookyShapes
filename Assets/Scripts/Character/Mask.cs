@@ -34,24 +34,23 @@ namespace Character
             var camera = LevelManager.Instance.camera;
             var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
-            var direction = mousePos - playerPos;
-
+            var direction = (mousePos - playerPos).normalized;
 
             var notCollided = true;
             line.positionCount = 0;
             var newPosition = transform.position;
+            var velocity = throwForce * direction;
             do
             {
                 var positionCount = line.positionCount;
                 positionCount += 1;
 
-
                 line.positionCount = positionCount;
                 line.SetPosition(positionCount - 1, newPosition);
 
-                if (line.positionCount > 20) notCollided = false;
-                newPosition = newPosition +
-                              (Vector3) (((throwForce * direction + Vector2.down * 20) * Time.fixedDeltaTime));
+                if (line.positionCount > 50) notCollided = false;
+                velocity += Physics2D.gravity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
             } while (notCollided);
         }
 
@@ -62,7 +61,7 @@ namespace Character
                 var camera = LevelManager.Instance.camera;
                 var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
-                var direction = mousePos - playerPos;
+                var direction = (mousePos - playerPos).normalized;
 
                 Throw(direction);
             }
