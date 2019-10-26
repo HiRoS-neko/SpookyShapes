@@ -27,7 +27,7 @@ namespace Character
         [SerializeField] private float jumpForce;
 
         [SerializeField] private State canJump;
-        private Collider2D coll2D;
+        [SerializeField] private Collider2D coll2D;
 
         Animator anim;
         float moving = 0;
@@ -99,6 +99,14 @@ namespace Character
             }
         }
 
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            if (collision.CompareTag("Player"))
+            {
+                collision.GetComponent<Mask>().Attach(this);
+            }
+        }
+
         private void OnCollisionEnter2D(Collision2D other)
         {
             var ground = Physics2D.OverlapCircle(
@@ -114,7 +122,7 @@ namespace Character
         {
             //if (rgd.velocity.magnitude < maxSpeed)
             var vel = rgd.velocity;
-            moving = Mathf.Abs( movement.x);
+            moving = Mathf.Abs(movement.x);
 
             if (movement.x != 0)
             {

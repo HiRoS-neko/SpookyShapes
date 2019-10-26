@@ -9,6 +9,7 @@ namespace Character
 {
     public class Mask : MonoBehaviour
     {
+        private Character oldHost;
         [SerializeField] private Character currentlyControlling;
 
         [SerializeField] private Rigidbody2D rgd;
@@ -33,7 +34,7 @@ namespace Character
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -54,7 +55,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -75,7 +76,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -85,12 +86,15 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
+            oldHost = currentlyControlling;
             currentlyControlling = null;
+            rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
             thrown = true;
         }
+
 
         private void JumpOnPerformed(InputAction.CallbackContext obj)
         {
@@ -108,17 +112,21 @@ namespace Character
             }
         }
 
-        private void OnTriggerEnter(Collider other)
+        public void Attach(Character parent)
         {
-            if (other.CompareTag("Enemy"))
-            {
-                thrown = false;
-                currentlyControlling = other.GetComponent<Character>();
-                transform.parent = other.transform;
-                //todo place on face
-                transform.localPosition = currentlyControlling.facePos;
-            }
+
+            if (parent == oldHost) return;
+            rgd.simulated = false;
+            rgd.bodyType = RigidbodyType2D.Kinematic;
+
+            thrown = false;
+            currentlyControlling = parent;
+            transform.parent = parent.transform;
+            //todo place on face
+            transform.localPosition = currentlyControlling.facePos;
         }
+
+
 
         private void FixedUpdate()
         {
