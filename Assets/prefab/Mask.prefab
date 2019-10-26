@@ -89,8 +89,11 @@ MonoBehaviour:
   rgd: {fileID: 4634354715809561648}
   throwForce: 2
   line: {fileID: 4634354715809561653}
-  movementSpeed: 2
-  maxSpeed: 2
+  movementSpeed: 3
+  maxSpeed: 6
+  coll2D: {fileID: 4634354715809561651}
+  canJump: 0
+  jumpForce: 1
 --- !u!120 &4634354715809561653
 LineRenderer:
   m_ObjectHideFlags: 0

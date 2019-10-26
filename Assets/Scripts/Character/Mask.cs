@@ -22,7 +22,7 @@ namespace Character
         [SerializeField] private float movementSpeed;
         [SerializeField] private float maxSpeed;
         [SerializeField] private Collider2D coll2D;
-        private void Awake()
+        private void OnEnable()
         {
             controls = new Controls();
             controls.Enable();
@@ -31,12 +31,16 @@ namespace Character
             controls.Player.Attack.performed += AttackOnPerformed;
         }
 
-        private void Start()
+        private void OnDisable()
         {
-            coll2D = GetComponent<Collider2D>();
+            controls.Player.Jump.performed -= JumpOnPerformed;
+            controls.Player.Attack.performed -= AttackOnPerformed;
+
+            controls.Disable();
+            controls.Dispose();
+
         }
 
-        
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
@@ -118,6 +122,7 @@ namespace Character
             {
                 currentlyControlling.Jump();
             }
+            else if (!thrown) Jump();
         }
 
         private void OnCollisionEnter2D(Collision2D other)
@@ -132,7 +137,7 @@ namespace Character
         public void Jump()
         {
             var ground = Physics2D.OverlapCircle(
-                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.size.y),
+                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
                 0.001f, 1 << 9);
             if (ground != null)
             {
@@ -171,7 +176,6 @@ namespace Character
 
             thrown = false;
             currentlyControlling = parent;
-            transform.localScale = Vector3.one * 0.5f;
             transform.parent = parent.transform;
             rgd.velocity = Vector2.zero;
 
@@ -211,6 +215,11 @@ namespace Character
                 else
                 {
                     line.positionCount = 0;
+                }
+
+                if (Keyboard.current.rKey.wasPressedThisFrame)
+                {
+                    GameManager.ResetLevel();
                 }
             }
         }
