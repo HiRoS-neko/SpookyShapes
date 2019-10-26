@@ -85,7 +85,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentlyControlling: {fileID: 0}
   rgd: {fileID: 4634354715809561648}
-  throwForce: 0.1
+  throwForce: 20
   line: {fileID: 4634354715809561653}
 --- !u!120 &4634354715809561653
 LineRenderer:
