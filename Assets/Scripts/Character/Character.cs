@@ -29,7 +29,7 @@ namespace Character
         [SerializeField] private State canJump;
         [SerializeField] private Collider2D coll2D;
 
-
+        public bool win;
         public Patrol patrol;
 
         public Animator anim;

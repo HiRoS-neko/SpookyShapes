@@ -48,7 +48,7 @@ Rigidbody2D:
   m_Simulated: 0
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.1
+  m_Mass: 0.01
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -87,13 +87,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentlyControlling: {fileID: 0}
   rgd: {fileID: 4634354715809561648}
-  throwForce: 2
+  mesh: {fileID: 2059066255839362258}
+  text: {fileID: 2800000, guid: 037fb6b881caeb9479349a49affa5ed5, type: 3}
+  throwForce: 0.2
   line: {fileID: 4634354715809561653}
-  movementSpeed: 3
-  maxSpeed: 6
+  movementSpeed: 2
+  maxSpeed: 4
   coll2D: {fileID: 4634354715809561651}
   canJump: 0
-  jumpForce: 1
+  jumpForce: 0.1
 --- !u!120 &4634354715809561653
 LineRenderer:
   m_ObjectHideFlags: 0

@@ -7,12 +7,15 @@ using UnityEngine.InputSystem;
 
 namespace Character
 {
+    [ExecuteInEditMode]
     public class Mask : MonoBehaviour
     {
         private Character oldHost;
         [SerializeField] private Character currentlyControlling;
 
         [SerializeField] private Rigidbody2D rgd;
+        [SerializeField] private MeshRenderer mesh;
+        [SerializeField] private Texture text;
 
         private Controls controls;
         [SerializeField] private float throwForce;
@@ -21,9 +24,12 @@ namespace Character
         private bool thrown;
         [SerializeField] private float movementSpeed;
         [SerializeField] private float maxSpeed;
+        private static readonly int MainTex = Shader.PropertyToID("_MainTex");
+        private MaterialPropertyBlock prop;
         [SerializeField] private Collider2D coll2D;
         private void OnEnable()
         {
+            prop = new MaterialPropertyBlock();
             controls = new Controls();
             controls.Enable();
 
@@ -41,10 +47,25 @@ namespace Character
 
         }
 
+        private void Update()
+        {
+            UpdateTexture();
+            if (aiming && currentlyControlling != null) AimOnPerformed();
+            else line.positionCount = 0;
+        }
+
+        private void UpdateTexture()
+        {
+            if (prop == null) prop = new MaterialPropertyBlock();
+            mesh.GetPropertyBlock(prop);
+            prop.SetTexture(MainTex, text);
+            mesh.SetPropertyBlock(prop);
+        }
+
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -65,7 +86,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -86,7 +107,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -96,7 +117,7 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
-            currentlyControlling.anim.SetFloat("throw");
+            currentlyControlling.anim.SetTrigger("throw");
             oldHost = currentlyControlling;
             //if (oldHost.patrol != null)
             //    oldHost.patrol.enabled = true;
@@ -110,12 +131,13 @@ namespace Character
             rgd.rotation = 0;
             transform.localRotation = Quaternion.identity;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
+            rgd.AddTorque(-direction.x / 10);
             thrown = true;
         }
 
         [SerializeField] private State canJump;
         [SerializeField] private float jumpForce;
-
+        private bool aiming;
 
         private void JumpOnPerformed(InputAction.CallbackContext obj)
         {
@@ -138,7 +160,7 @@ namespace Character
         public void Jump()
         {
             var ground = Physics2D.OverlapCircle(
-                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
+                (Vector2)(coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
                 0.001f, 1 << 9);
             if (ground != null)
             {
@@ -180,6 +202,9 @@ namespace Character
             transform.parent = parent.transform;
             rgd.velocity = Vector2.zero;
 
+            var parScale = parent.transform.localScale;
+            transform.localScale = new Vector3(0.5f / parScale.x, 0.5f / parScale.y, 0.5f / parScale.z);
+
             rgd.rotation = 0;
             transform.localRotation = Quaternion.identity;
 
@@ -192,7 +217,10 @@ namespace Character
                 currentlyControlling.facePos.y / scale.y, -1);
 
             rgd.position = transform.position;
+
+            if (currentlyControlling.win) GameManager.Instance.SwitchToLevel(GameManager.Levels.Menu);
         }
+
 
 
         private void FixedUpdate()
@@ -211,11 +239,13 @@ namespace Character
 
                 if (Mouse.current.rightButton.isPressed && currentlyControlling != null)
                 {
-                    AimOnPerformed();
+                    aiming = true;
+                    Time.timeScale = .25f;
                 }
                 else
                 {
-                    line.positionCount = 0;
+                    aiming = false;
+                    Time.timeScale = 1;
                 }
 
                 if (Keyboard.current.rKey.wasPressedThisFrame)
