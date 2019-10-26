@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraFollow : MonoBehaviour
 {
     [SerializeField] float interpVelocity;
-    [SerializeField] float minDistance;
-    [SerializeField] float followDistance;
+    //[SerializeField] float minDistance;
+    //[SerializeField] float followDistance;
     [SerializeField] GameObject target;
     [SerializeField] Vector3 offset;
     [SerializeField] Vector3 targetPos;
