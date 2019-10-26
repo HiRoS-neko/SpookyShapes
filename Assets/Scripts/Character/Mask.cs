@@ -126,6 +126,7 @@ namespace Character
             {
                 thrown = false;
             }
+            oldHost = null;
         }
 
         public void Jump()
