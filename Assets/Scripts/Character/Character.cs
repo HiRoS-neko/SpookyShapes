@@ -30,6 +30,7 @@ namespace Character
         private Collider2D coll2D;
 
         Animator anim;
+        float moving = 0;
         private void Start()
         {
             prop = new MaterialPropertyBlock();
@@ -40,7 +41,7 @@ namespace Character
         private void Update()
         {
             UpdateTexture();
-            //anim.SetFloat("move", )
+            anim.SetFloat("move", moving);
         }
 
 
@@ -61,7 +62,7 @@ namespace Character
         public void Jump()
         {
             var ground = Physics2D.OverlapCircle(
-                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
+                (Vector2)(coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
                 0.001f, 1 << 9);
             if (ground != null)
             {
@@ -93,7 +94,7 @@ namespace Character
         private void OnCollisionEnter2D(Collision2D other)
         {
             var ground = Physics2D.OverlapCircle(
-                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
+                (Vector2)(coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
                 0.001f, 1 << 9);
             if (ground != null)
             {
@@ -105,11 +106,12 @@ namespace Character
         {
             //if (rgd.velocity.magnitude < maxSpeed)
             var vel = rgd.velocity;
+            moving = Mathf.Abs( movement.x);
 
             if (movement.x != 0)
             {
                 var localScale = transform.localScale;
-                localScale = new Vector3(Mathf.Sign(movement.x) * localScale.x,
+                localScale = new Vector3(Mathf.Sign(movement.x) * Mathf.Abs(localScale.x),
                     localScale.y, localScale.z);
                 transform.localScale = localScale;
             }
