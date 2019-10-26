@@ -48,9 +48,22 @@ namespace Character
                 line.positionCount = positionCount;
                 line.SetPosition(positionCount - 1, newPosition);
 
-                if (line.positionCount > 50) notCollided = false;
+
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
+
+                var oldPosition = newPosition;
                 newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
+                var dir = velocity.normalized;
+
+                RaycastHit2D hit = Physics2D.Raycast(oldPosition, dir,
+                    (velocity.magnitude * Time.fixedDeltaTime), 1 << 9);
+                if (hit.collider != null)
+                {
+                    newPosition = hit.point - velocity.normalized*0.001f;
+                    velocity = Vector2.Reflect(dir, hit.normal) * velocity.magnitude;
+                }
+
+                if (line.positionCount > 50) notCollided = false;
             } while (notCollided);
         }
 
