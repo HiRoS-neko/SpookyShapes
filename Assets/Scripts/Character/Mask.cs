@@ -49,9 +49,9 @@ namespace Character
                 line.positionCount = positionCount;
                 line.SetPosition(positionCount - 1, newPosition);
 
-                if (line.positionCount > 5) notCollided = false;
+                if (line.positionCount > 20) notCollided = false;
                 newPosition = newPosition +
-                              (Vector3) (((throwForce * direction - Vector2.down * 9.81f) * Time.fixedDeltaTime));
+                              (Vector3) (((throwForce * direction + Vector2.down * 20) * Time.fixedDeltaTime));
             } while (notCollided);
         }
 
