@@ -34,7 +34,7 @@ namespace Character
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -42,7 +42,7 @@ namespace Character
             var reflected = false;
             line.positionCount = 0;
             var newPosition = transform.position;
-            var velocity = throwForce * direction;
+            var velocity = (throwForce * direction)/rgd.mass;
             do
             {
                 var positionCount = line.positionCount;
@@ -55,7 +55,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -76,7 +76,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -87,14 +87,17 @@ namespace Character
         private void Throw(Vector2 direction)
         {
             oldHost = currentlyControlling;
-            oldHost.patrol.enabled = true;
+            //if (oldHost.patrol != null)
+            //    oldHost.patrol.enabled = true;
             currentlyControlling = null;
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
             transform.localScale = Vector3.one * 0.5f;
+            rgd.position = transform.position;
             rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
+            transform.localRotation = Quaternion.identity;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
             thrown = true;
         }
@@ -119,7 +122,8 @@ namespace Character
         public void Attach(Character parent)
         {
             if (parent == oldHost) return;
-            parent.patrol.enabled = false;
+            if (parent.patrol != null)
+                parent.patrol.enabled = false;
             rgd.simulated = false;
             rgd.bodyType = RigidbodyType2D.Kinematic;
 
@@ -130,10 +134,20 @@ namespace Character
             rgd.velocity = Vector2.zero;
 
             rgd.rotation = 0;
-            //place on face
+            transform.localRotation = Quaternion.identity;
+
+
+
+            //transform.position = parent.transform.position + parent.facePos;
+           
+
+
             var scale = currentlyControlling.transform.localScale;
             transform.localPosition = new Vector3(currentlyControlling.facePos.x / scale.x,
-                currentlyControlling.facePos.y / scale.y, currentlyControlling.facePos.z / scale.z);
+                currentlyControlling.facePos.y / scale.y, -1);
+
+            rgd.position = transform.position;
+
         }
 
 
@@ -177,11 +191,11 @@ namespace Character
 
             if (Mathf.Abs((vel + movement * movementSpeed).x) < maxSpeed) //less then max speed, just add it
                 vel += movement * movementSpeed;
-            else //it is greater, so set to max speed
+            else if (movement.x != 0)//it is greater, so set to max speed
                 vel.x = maxSpeed * Mathf.Sign(movement.x);
 
-            if (Math.Abs(movement.x) < 0.001f)
-                vel.x = 0;
+            //if (Math.Abs(movement.x) < 0.001f)
+                //vel.x = 0;
 
             rgd.velocity = vel;
         }
