@@ -21,7 +21,7 @@ namespace Character
         private bool thrown;
         [SerializeField] private float movementSpeed;
         [SerializeField] private float maxSpeed;
-
+        [SerializeField] private Collider2D coll2D;
         private void Awake()
         {
             controls = new Controls();
@@ -31,10 +31,16 @@ namespace Character
             controls.Player.Attack.performed += AttackOnPerformed;
         }
 
+        private void Start()
+        {
+            coll2D = GetComponent<Collider2D>();
+        }
+
+        
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -42,7 +48,7 @@ namespace Character
             var reflected = false;
             line.positionCount = 0;
             var newPosition = transform.position;
-            var velocity = (throwForce * direction)/rgd.mass;
+            var velocity = (throwForce * direction) / rgd.mass;
             do
             {
                 var positionCount = line.positionCount;
@@ -55,7 +61,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -76,7 +82,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -102,6 +108,9 @@ namespace Character
             thrown = true;
         }
 
+        [SerializeField] private State canJump;
+        [SerializeField] private float jumpForce;
+
 
         private void JumpOnPerformed(InputAction.CallbackContext obj)
         {
@@ -116,6 +125,38 @@ namespace Character
             if (thrown)
             {
                 thrown = false;
+            }
+        }
+
+        public void Jump()
+        {
+            var ground = Physics2D.OverlapCircle(
+                (Vector2) (coll2D.bounds.center) - new Vector2(0, coll2D.bounds.size.y),
+                0.001f, 1 << 9);
+            if (ground != null)
+            {
+                canJump = State.OnGround;
+            }
+            else if (canJump == State.OnGround)
+            {
+                canJump = State.JumpedOnce;
+            }
+
+
+            switch (canJump)
+            {
+                case State.OnGround:
+                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                    canJump = State.JumpedOnce;
+                    break;
+                case State.JumpedOnce:
+                    //rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                    //canJump = State.JumpedTwice;
+                    break;
+                case State.JumpedTwice:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -137,9 +178,7 @@ namespace Character
             transform.localRotation = Quaternion.identity;
 
 
-
             //transform.position = parent.transform.position + parent.facePos;
-           
 
 
             var scale = currentlyControlling.transform.localScale;
@@ -147,7 +186,6 @@ namespace Character
                 currentlyControlling.facePos.y / scale.y, -1);
 
             rgd.position = transform.position;
-
         }
 
 
@@ -191,11 +229,11 @@ namespace Character
 
             if (Mathf.Abs((vel + movement * movementSpeed).x) < maxSpeed) //less then max speed, just add it
                 vel += movement * movementSpeed;
-            else if (movement.x != 0)//it is greater, so set to max speed
+            else if (movement.x != 0) //it is greater, so set to max speed
                 vel.x = maxSpeed * Mathf.Sign(movement.x);
 
             //if (Math.Abs(movement.x) < 0.001f)
-                //vel.x = 0;
+            //vel.x = 0;
 
             rgd.velocity = vel;
         }
