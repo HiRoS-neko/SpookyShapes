@@ -25,6 +25,34 @@ namespace Character
 
             controls.Player.Jump.performed += JumpOnPerformed;
             controls.Player.Attack.performed += AttackOnPerformed;
+
+            controls.Player.Aim.performed += AimOnPerformed;
+        }
+
+        private void AimOnPerformed(InputAction.CallbackContext obj)
+        {
+            var camera = LevelManager.Instance.camera;
+            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
+            var direction = mousePos - playerPos;
+
+
+            var notCollided = true;
+            line.positionCount = 0;
+            var newPosition = transform.position;
+            do
+            {
+                var positionCount = line.positionCount;
+                positionCount += 1;
+
+
+                line.positionCount = positionCount;
+                line.SetPosition(positionCount - 1, newPosition);
+
+                if (line.positionCount > 5) notCollided = false;
+                newPosition = newPosition +
+                              (Vector3) (((throwForce * direction - Vector2.down * 9.81f) * Time.fixedDeltaTime));
+            } while (notCollided);
         }
 
         private void AttackOnPerformed(InputAction.CallbackContext obj)
@@ -34,7 +62,7 @@ namespace Character
                 var camera = LevelManager.Instance.camera;
                 var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
-                var direction = playerPos - mousePos;
+                var direction = mousePos - playerPos;
 
                 Throw(direction);
             }
@@ -62,31 +90,6 @@ namespace Character
                 if (currentlyControlling != null)
                 {
                     currentlyControlling.Move(new Vector2(movement, 0));
-                }
-
-                if (controls.Player.Aim.ReadValue<float>() > 0.5f)
-                {
-                    var camera = LevelManager.Instance.camera;
-                    var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
-                    var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
-                    var direction = playerPos - mousePos;
-
-
-                    var notCollided = true;
-                    line.positionCount = 0;
-                    var newPosition = transform.position;
-                    do
-                    {
-                        var positionCount = line.positionCount;
-                        positionCount += 1;
-
-                        newPosition = newPosition + (Vector3) ((throwForce * Time.fixedDeltaTime)*direction);
-
-                        line.positionCount = positionCount;
-                        line.SetPosition(positionCount - 1, newPosition);
-
-                        if (line.positionCount > 5) notCollided = false;    
-                    } while (notCollided);
                 }
             }
         }
