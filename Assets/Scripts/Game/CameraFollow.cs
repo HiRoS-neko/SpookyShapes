@@ -4,35 +4,19 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] float interpVelocity;
-    //[SerializeField] float minDistance;
-    //[SerializeField] float followDistance;
-    [SerializeField] GameObject target;
-    [SerializeField] Vector3 offset;
-    [SerializeField] Vector3 targetPos;
-    [SerializeField] float delay;
-    // Use this for initialization
-    void Start()
+    public GameObject objectToFollow;
+
+    public float speed;
+    public Vector3 distance;
+
+    void Update()
     {
-        targetPos = transform.position;
-    }
+        float interpolation = speed * Time.deltaTime;
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        if (target)
-        {
-            Vector3 posNoZ = transform.position;
-            posNoZ.z = target.transform.position.z;
+        Vector3 position = this.transform.position;
+        position.y = Mathf.Lerp(this.transform.position.y, objectToFollow.transform.position.y+distance.y, interpolation);
+        position.x = Mathf.Lerp(this.transform.position.x, objectToFollow.transform.position.x+distance.x, interpolation);
 
-            Vector3 targetDirection = (target.transform.position - posNoZ);
-
-            interpVelocity = targetDirection.magnitude * 5f;
-
-            targetPos = transform.position + (targetDirection.normalized * interpVelocity * Time.deltaTime);
-
-            transform.position = Vector3.Lerp(transform.position, targetPos + offset, delay);
-
-        }
+        this.transform.position = position;
     }
 }
