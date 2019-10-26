@@ -116,6 +116,7 @@ namespace Character
             {
                 thrown = false;
             }
+            oldHost = null;
         }
 
         public void Attach(Character parent)
