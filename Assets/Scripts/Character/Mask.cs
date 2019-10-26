@@ -42,7 +42,7 @@ namespace Character
             var reflected = false;
             line.positionCount = 0;
             var newPosition = transform.position;
-            var velocity = throwForce * direction;
+            var velocity = (throwForce * direction)/rgd.mass;
             do
             {
                 var positionCount = line.positionCount;
@@ -96,6 +96,7 @@ namespace Character
             rgd.position = transform.position;
             rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
+            transform.localRotation = Quaternion.identity;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
             thrown = true;
         }
@@ -131,10 +132,19 @@ namespace Character
 
             rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
+            transform.localRotation = Quaternion.identity;
+
+
 
             //transform.position = parent.transform.position + parent.facePos;
-            rgd.position = parent.transform.position + parent.facePos;
+           
 
+
+            var scale = currentlyControlling.transform.localScale;
+            transform.localPosition = new Vector3(currentlyControlling.facePos.x / scale.x,
+                currentlyControlling.facePos.y / scale.y, -1);
+
+            rgd.position = transform.position;
 
         }
 
@@ -179,7 +189,7 @@ namespace Character
 
             if (Mathf.Abs((vel + movement * movementSpeed).x) < maxSpeed) //less then max speed, just add it
                 vel += movement * movementSpeed;
-            else //it is greater, so set to max speed
+            else if (movement.x != 0)//it is greater, so set to max speed
                 vel.x = maxSpeed * Mathf.Sign(movement.x);
 
             //if (Math.Abs(movement.x) < 0.001f)

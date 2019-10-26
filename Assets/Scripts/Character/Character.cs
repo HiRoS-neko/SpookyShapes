@@ -39,7 +39,7 @@ namespace Character
         private void Start()
         {
             prop = new MaterialPropertyBlock();
-            coll2D = GetComponent<Collider2D>();
+            //coll2D = GetComponent<Collider2D>();
             anim = GetComponent<Animator>();
             patrol = GetComponent<Patrol>();
         }
@@ -74,7 +74,7 @@ namespace Character
         public void Jump()
         {
             var ground = Physics2D.OverlapCircle(
-                (Vector2)(coll2D.bounds.center) - new Vector2(0, coll2D.bounds.extents.y),
+                (Vector2)(coll2D.bounds.center) - new Vector2(0, coll2D.bounds.size.y),
                 0.001f, 1 << 9);
             if (ground != null)
             {

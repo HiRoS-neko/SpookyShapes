@@ -355,11 +355,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2359476915765038162, guid: a62a1abd255491441a82ab6cd6f7d54c,
-        type: 3}
-      propertyPath: coll2D
-      value: 
-      objectReference: {fileID: 1565977899}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a62a1abd255491441a82ab6cd6f7d54c, type: 3}
 --- !u!1001 &178809813
@@ -1522,11 +1517,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2359476915765038162, guid: a62a1abd255491441a82ab6cd6f7d54c,
-        type: 3}
-      propertyPath: coll2D
-      value: 
-      objectReference: {fileID: 1808133673}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a62a1abd255491441a82ab6cd6f7d54c, type: 3}
 --- !u!1001 &1443052350
@@ -1613,12 +1603,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98fc5275e283d75419c4a35d10a0ca8e, type: 3}
---- !u!70 &1565977899 stripped
-CapsuleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 4406077796549278881, guid: a62a1abd255491441a82ab6cd6f7d54c,
-    type: 3}
-  m_PrefabInstance: {fileID: 155462739}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1565977901 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2359476915765038162, guid: a62a1abd255491441a82ab6cd6f7d54c,
@@ -1652,7 +1636,7 @@ PrefabInstance:
     - target: {fileID: 4826126009379429325, guid: a62a1abd255491441a82ab6cd6f7d54c,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65.6713
+      value: 72.54
       objectReference: {fileID: 0}
     - target: {fileID: 4826126009379429325, guid: a62a1abd255491441a82ab6cd6f7d54c,
         type: 3}
@@ -1709,12 +1693,6 @@ PrefabInstance:
 --- !u!1 &1808133671 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3373571035609997005, guid: a62a1abd255491441a82ab6cd6f7d54c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1322891717}
-  m_PrefabAsset: {fileID: 0}
---- !u!70 &1808133673 stripped
-CapsuleCollider2D:
-  m_CorrespondingSourceObject: {fileID: 4406077796549278881, guid: a62a1abd255491441a82ab6cd6f7d54c,
     type: 3}
   m_PrefabInstance: {fileID: 1322891717}
   m_PrefabAsset: {fileID: 0}
@@ -1839,8 +1817,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 9
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
