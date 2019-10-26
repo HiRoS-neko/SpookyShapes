@@ -34,7 +34,7 @@ namespace Character
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -55,7 +55,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -76,7 +76,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -91,6 +91,7 @@ namespace Character
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
+            rgd.rotation = 0;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
             thrown = true;
         }
@@ -114,7 +115,6 @@ namespace Character
 
         public void Attach(Character parent)
         {
-
             if (parent == oldHost) return;
             rgd.simulated = false;
             rgd.bodyType = RigidbodyType2D.Kinematic;
@@ -122,10 +122,12 @@ namespace Character
             thrown = false;
             currentlyControlling = parent;
             transform.parent = parent.transform;
-            //todo place on face
-            transform.localPosition = currentlyControlling.facePos;
+            rgd.rotation = 0;
+            //place on face
+            var scale = currentlyControlling.transform.localScale;
+            transform.localPosition = new Vector3(currentlyControlling.facePos.x / scale.x,
+                currentlyControlling.facePos.y / scale.y, currentlyControlling.facePos.z / scale.z);
         }
-
 
 
         private void FixedUpdate()
