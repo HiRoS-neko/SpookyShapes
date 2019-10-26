@@ -24,7 +24,7 @@ namespace Character
         {
             if (currentlyControlling != null)
             {
-                currentlyControlling.Jump();
+                currentlyControlling.Attack();
             }
         }
 
@@ -32,7 +32,7 @@ namespace Character
         {
             if (currentlyControlling != null)
             {
-                currentlyControlling.Attack();
+                currentlyControlling.Jump();
             }
         }
 
