@@ -31,8 +31,8 @@ namespace Character
 
 
         public Patrol patrol;
-        
-        Animator anim;
+
+        public Animator anim;
         float moving = 0;
         public Vector3 facePos;
 
@@ -90,6 +90,7 @@ namespace Character
             {
                 case State.OnGround:
                     rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+                    anim.SetTrigger("jump");
                     canJump = State.JumpedOnce;
                     break;
                 case State.JumpedOnce:
@@ -119,6 +120,7 @@ namespace Character
             if (ground != null)
             {
                 canJump = State.OnGround;
+                anim.SetTrigger("fall");
             }
         }
 

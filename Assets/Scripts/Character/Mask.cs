@@ -96,6 +96,7 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
+            currentlyControlling.anim.SetFloat("throw");
             oldHost = currentlyControlling;
             //if (oldHost.patrol != null)
             //    oldHost.patrol.enabled = true;
