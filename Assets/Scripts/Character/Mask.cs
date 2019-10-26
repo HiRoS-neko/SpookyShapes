@@ -93,6 +93,7 @@ namespace Character
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
+            transform.localScale = Vector3.one * 0.5f;
             rgd.position = transform.position;
             rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
@@ -129,9 +130,10 @@ namespace Character
 
             thrown = false;
             currentlyControlling = parent;
+            transform.localScale = Vector3.one * 0.5f;
             transform.parent = parent.transform;
-
             rgd.velocity = Vector2.zero;
+
             rgd.rotation = 0;
             transform.localRotation = Quaternion.identity;
 

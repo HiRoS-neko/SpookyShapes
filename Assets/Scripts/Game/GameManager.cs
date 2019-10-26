@@ -10,6 +10,8 @@ namespace Game
     {
         public static GameManager Instance;
 
+        public Levels currentLevel;
+
         public enum Levels
         {
             Menu = -1,
@@ -21,6 +23,11 @@ namespace Game
         [SerializeField] private string menu;
 
         [SerializeField] private List<string> levels;
+
+        public static void ResetLevel()
+        {
+            Instance.SwitchToLevel(Instance.currentLevel);
+        }
 
         public void SwitchToLevel(Levels levelName)
         {
@@ -35,6 +42,7 @@ namespace Game
                     break;
             }
 
+            currentLevel = levelName;
             StartCoroutine(UnLoadLevel(SceneManager.GetActiveScene().name, LoadLevel(nextLevelName)));
         }
 
