@@ -135,4 +135,5 @@ MonoBehaviour:
   text: {fileID: 0}
   maxSpeed: 5
   movementSpeed: 2.5
-  jumpForce: 500
+  jumpForce: 10
+  canJump: 0

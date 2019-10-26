@@ -54,9 +54,6 @@ namespace Character
             mesh = GetComponent<MeshRenderer>();
         }
 
-        public void Attack()
-        {
-        }
 
         public void Jump()
         {
@@ -73,11 +70,11 @@ namespace Character
             switch (canJump)
             {
                 case State.OnGround:
-                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
+                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
                     canJump = State.JumpedOnce;
                     break;
                 case State.JumpedOnce:
-                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Force);
+                    rgd.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
                     canJump = State.JumpedTwice;
                     break;
                 case State.JumpedTwice:

@@ -41,6 +41,22 @@ public class Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""AttackDirection"",
+                    ""type"": ""Value"",
+                    ""id"": ""bd0bc48f-4c63-4019-bf97-1a8c744ea6d2"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""d101a611-ff3c-4b09-a332-9f1ad6dce834"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -109,6 +125,28 @@ public class Controls : IInputActionCollection, IDisposable
                     ""action"": ""Attack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""04a0d23b-23f2-4089-b403-51b46459c154"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KB&M"",
+                    ""action"": ""AttackDirection"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5f0e4c43-6166-4ee0-b8b4-6eb7550e68be"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""KB&M"",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -125,7 +163,7 @@ public class Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""devicePath"": ""<Mouse>"",
-                    ""isOptional"": true,
+                    ""isOptional"": false,
                     ""isOR"": false
                 }
             ]
@@ -137,6 +175,8 @@ public class Controls : IInputActionCollection, IDisposable
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Attack = m_Player.FindAction("Attack", throwIfNotFound: true);
+        m_Player_AttackDirection = m_Player.FindAction("AttackDirection", throwIfNotFound: true);
+        m_Player_Aim = m_Player.FindAction("Aim", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -189,6 +229,8 @@ public class Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Movement;
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Attack;
+    private readonly InputAction m_Player_AttackDirection;
+    private readonly InputAction m_Player_Aim;
     public struct PlayerActions
     {
         private Controls m_Wrapper;
@@ -196,6 +238,8 @@ public class Controls : IInputActionCollection, IDisposable
         public InputAction @Movement => m_Wrapper.m_Player_Movement;
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Attack => m_Wrapper.m_Player_Attack;
+        public InputAction @AttackDirection => m_Wrapper.m_Player_AttackDirection;
+        public InputAction @Aim => m_Wrapper.m_Player_Aim;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +258,12 @@ public class Controls : IInputActionCollection, IDisposable
                 Attack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 Attack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
                 Attack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttack;
+                AttackDirection.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttackDirection;
+                AttackDirection.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttackDirection;
+                AttackDirection.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAttackDirection;
+                Aim.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                Aim.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
+                Aim.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAim;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -227,6 +277,12 @@ public class Controls : IInputActionCollection, IDisposable
                 Attack.started += instance.OnAttack;
                 Attack.performed += instance.OnAttack;
                 Attack.canceled += instance.OnAttack;
+                AttackDirection.started += instance.OnAttackDirection;
+                AttackDirection.performed += instance.OnAttackDirection;
+                AttackDirection.canceled += instance.OnAttackDirection;
+                Aim.started += instance.OnAim;
+                Aim.performed += instance.OnAim;
+                Aim.canceled += instance.OnAim;
             }
         }
     }
@@ -245,5 +301,7 @@ public class Controls : IInputActionCollection, IDisposable
         void OnMovement(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
+        void OnAttackDirection(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
     }
 }

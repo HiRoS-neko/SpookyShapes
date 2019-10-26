@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Game;
 using UnityEngine;
 
 public class Patrol : MonoBehaviour
@@ -16,28 +17,28 @@ public class Patrol : MonoBehaviour
     {
         Vector3 dir;
 
-        if (patrolPathIndex < LevelManager.levelManager.patrolPoints.Count && patrolPathIndex >= 0)
+        if (patrolPathIndex < LevelManager.Instance.patrolPoints.Count && patrolPathIndex >= 0)
         {
             //no target found, move to closest patrol point
             if (patrolPathPositionIndex == -1)
             {
-                patrolPathPositionIndex = LevelManager.levelManager.patrolPoints[patrolPathIndex]
+                patrolPathPositionIndex = LevelManager.Instance.patrolPoints[patrolPathIndex]
                     .GetClosestPoint(transform.position);
             }
             else
             {
                 //get direction to next patrol point
-                dir = GetDirection(LevelManager.levelManager.patrolPoints[patrolPathIndex]
+                dir = GetDirection(LevelManager.Instance.patrolPoints[patrolPathIndex]
                     .points[patrolPathPositionIndex]);
                 //check if we are pretty close, and change to the next patrol point
                 if (dir.magnitude < 0.5f)
                 {
                     //update the patrol point
                     patrolPathPositionIndex = (patrolPathPositionIndex + 1) %
-                                              LevelManager.levelManager.patrolPoints[patrolPathIndex].points
+                                              LevelManager.Instance.patrolPoints[patrolPathIndex].points
                                                   .Count;
                     //get direction to new patrol point
-                    dir = GetDirection(LevelManager.levelManager.patrolPoints[patrolPathIndex]
+                    dir = GetDirection(LevelManager.Instance.patrolPoints[patrolPathIndex]
                         .points[patrolPathPositionIndex]);
                 }
 
