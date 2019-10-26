@@ -34,7 +34,7 @@ namespace Character
         private void AimOnPerformed()
         {
             var camera = LevelManager.Instance.camera;
-            var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+            var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
             var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
             var direction = (mousePos - playerPos).normalized;
 
@@ -55,7 +55,7 @@ namespace Character
                 velocity += Physics2D.gravity * Time.fixedDeltaTime;
 
                 var oldPosition = newPosition;
-                newPosition = newPosition + (Vector3) velocity * Time.fixedDeltaTime;
+                newPosition = newPosition + (Vector3)velocity * Time.fixedDeltaTime;
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
@@ -76,7 +76,7 @@ namespace Character
             if (currentlyControlling != null)
             {
                 var camera = LevelManager.Instance.camera;
-                var playerPos = (Vector2) camera.WorldToScreenPoint(currentlyControlling.transform.position);
+                var playerPos = (Vector2)camera.WorldToScreenPoint(currentlyControlling.transform.position);
                 var mousePos = controls.Player.AttackDirection.ReadValue<Vector2>();
                 var direction = (mousePos - playerPos).normalized;
 
@@ -87,11 +87,13 @@ namespace Character
         private void Throw(Vector2 direction)
         {
             oldHost = currentlyControlling;
-            oldHost.patrol.enabled = true;
+            //if (oldHost.patrol != null)
+            //    oldHost.patrol.enabled = true;
             currentlyControlling = null;
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
+            rgd.position = transform.position;
             rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
@@ -118,21 +120,22 @@ namespace Character
         public void Attach(Character parent)
         {
             if (parent == oldHost) return;
-            parent.patrol.enabled = false;
+            if (parent.patrol != null)
+                parent.patrol.enabled = false;
             rgd.simulated = false;
             rgd.bodyType = RigidbodyType2D.Kinematic;
 
             thrown = false;
             currentlyControlling = parent;
             transform.parent = parent.transform;
-            
+
             rgd.velocity = Vector2.zero;
-            
             rgd.rotation = 0;
-            //place on face
-            var scale = currentlyControlling.transform.localScale;
-            transform.localPosition = new Vector3(currentlyControlling.facePos.x / scale.x,
-                currentlyControlling.facePos.y / scale.y, currentlyControlling.facePos.z / scale.z);
+
+            //transform.position = parent.transform.position + parent.facePos;
+            rgd.position = parent.transform.position + parent.facePos;
+
+
         }
 
 
@@ -179,8 +182,8 @@ namespace Character
             else //it is greater, so set to max speed
                 vel.x = maxSpeed * Mathf.Sign(movement.x);
 
-            if (Math.Abs(movement.x) < 0.001f)
-                vel.x = 0;
+            //if (Math.Abs(movement.x) < 0.001f)
+                //vel.x = 0;
 
             rgd.velocity = vel;
         }
