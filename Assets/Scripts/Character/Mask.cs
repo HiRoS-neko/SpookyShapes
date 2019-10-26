@@ -25,7 +25,6 @@ namespace Character
 
             controls.Player.Jump.performed += JumpOnPerformed;
             controls.Player.Attack.performed += AttackOnPerformed;
-
         }
 
         private void AimOnPerformed()
@@ -56,7 +55,7 @@ namespace Character
                 var dir = velocity.normalized;
 
                 if (line.positionCount > 50 || reflected) notCollided = false;
-                
+
                 RaycastHit2D hit = Physics2D.Raycast(oldPosition, dir,
                     (velocity.magnitude * Time.fixedDeltaTime), 1 << 9);
                 if (hit.collider != null)
@@ -83,6 +82,7 @@ namespace Character
 
         private void Throw(Vector2 direction)
         {
+            currentlyControlling = null;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
@@ -106,9 +106,13 @@ namespace Character
                     currentlyControlling.Move(new Vector2(movement, 0));
                 }
 
-                if (controls.Player.Aim.triggered)
+                if (Mouse.current.rightButton.isPressed && currentlyControlling != null)
                 {
                     AimOnPerformed();
+                }
+                else
+                {
+                    line.positionCount = 0;
                 }
             }
         }
