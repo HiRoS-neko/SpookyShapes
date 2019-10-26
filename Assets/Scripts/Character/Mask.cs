@@ -17,6 +17,9 @@ namespace Character
         [SerializeField] private float throwForce;
 
         [SerializeField] private LineRenderer line;
+        private bool thrown;
+        [SerializeField] private float movementSpeed;
+        [SerializeField] private float maxSpeed;
 
         private void Awake()
         {
@@ -86,6 +89,7 @@ namespace Character
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
+            thrown = true;
         }
 
         private void JumpOnPerformed(InputAction.CallbackContext obj)
@@ -93,6 +97,26 @@ namespace Character
             if (currentlyControlling != null)
             {
                 currentlyControlling.Jump();
+            }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            if (thrown)
+            {
+                thrown = false;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Enemy"))
+            {
+                thrown = false;
+                currentlyControlling = other.GetComponent<Character>();
+                transform.parent = other.transform;
+                //todo place on face
+                transform.localPosition = currentlyControlling.facePos;
             }
         }
 
@@ -105,6 +129,10 @@ namespace Character
                 {
                     currentlyControlling.Move(new Vector2(movement, 0));
                 }
+                else if (!thrown)
+                {
+                    Move(new Vector2(movement, 0));
+                }
 
                 if (Mouse.current.rightButton.isPressed && currentlyControlling != null)
                 {
@@ -115,6 +143,30 @@ namespace Character
                     line.positionCount = 0;
                 }
             }
+        }
+
+        private void Move(Vector2 movement)
+        {
+            //if (rgd.velocity.magnitude < maxSpeed)
+            var vel = rgd.velocity;
+
+            if (movement.x != 0)
+            {
+                var localScale = transform.localScale;
+                localScale = new Vector3(Mathf.Sign(movement.x) * Mathf.Abs(localScale.x),
+                    localScale.y, localScale.z);
+                transform.localScale = localScale;
+            }
+
+            if (Mathf.Abs((vel + movement * movementSpeed).x) < maxSpeed) //less then max speed, just add it
+                vel += movement * movementSpeed;
+            else //it is greater, so set to max speed
+                vel.x = maxSpeed * Mathf.Sign(movement.x);
+
+            if (Math.Abs(movement.x) < 0.001f)
+                vel.x = 0;
+
+            rgd.velocity = vel;
         }
     }
 }

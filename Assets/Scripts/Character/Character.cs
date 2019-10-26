@@ -31,11 +31,19 @@ namespace Character
 
         Animator anim;
         float moving = 0;
+        public Vector3 facePos;
+
         private void Start()
         {
             prop = new MaterialPropertyBlock();
             coll2D = GetComponent<Collider2D>();
             anim = GetComponent<Animator>();
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(facePos + transform.position, 0.1f);
         }
 
         private void Update()
