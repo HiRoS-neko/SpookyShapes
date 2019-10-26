@@ -29,6 +29,9 @@ namespace Character
         [SerializeField] private State canJump;
         [SerializeField] private Collider2D coll2D;
 
+
+        public Patrol patrol;
+        
         Animator anim;
         float moving = 0;
         public Vector3 facePos;
@@ -38,6 +41,7 @@ namespace Character
             prop = new MaterialPropertyBlock();
             coll2D = GetComponent<Collider2D>();
             anim = GetComponent<Animator>();
+            patrol = GetComponent<Patrol>();
         }
 
         private void OnDrawGizmos()

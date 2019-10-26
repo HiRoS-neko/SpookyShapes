@@ -87,6 +87,7 @@ namespace Character
         private void Throw(Vector2 direction)
         {
             oldHost = currentlyControlling;
+            oldHost.patrol.enabled = true;
             currentlyControlling = null;
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
@@ -117,6 +118,7 @@ namespace Character
         public void Attach(Character parent)
         {
             if (parent == oldHost) return;
+            parent.patrol.enabled = false;
             rgd.simulated = false;
             rgd.bodyType = RigidbodyType2D.Kinematic;
 
