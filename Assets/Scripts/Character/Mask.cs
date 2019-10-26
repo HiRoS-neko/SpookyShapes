@@ -91,6 +91,7 @@ namespace Character
             rgd.simulated = true;
             rgd.bodyType = RigidbodyType2D.Dynamic;
             transform.parent = null;
+            rgd.velocity = Vector2.zero;
             rgd.rotation = 0;
             rgd.AddForce(direction * throwForce, ForceMode2D.Impulse);
             thrown = true;
@@ -122,6 +123,9 @@ namespace Character
             thrown = false;
             currentlyControlling = parent;
             transform.parent = parent.transform;
+            
+            rgd.velocity = Vector2.zero;
+            
             rgd.rotation = 0;
             //place on face
             var scale = currentlyControlling.transform.localScale;
