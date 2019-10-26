@@ -202,6 +202,16 @@ PrefabInstance:
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4265920978166164008, guid: a62a1abd255491441a82ab6cd6f7d54c,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4265920978166164008, guid: a62a1abd255491441a82ab6cd6f7d54c,
+        type: 3}
+      propertyPath: m_GravityScale
+      value: 9.81
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a62a1abd255491441a82ab6cd6f7d54c, type: 3}
 --- !u!1 &159971814 stripped
@@ -394,7 +404,7 @@ Animator:
   m_GameObject: {fileID: 1565977898}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2b23e650f8f72824f83ee29bcf3f0b98, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

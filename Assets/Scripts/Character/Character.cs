@@ -29,15 +29,18 @@ namespace Character
         [SerializeField] private State canJump;
         private Collider2D coll2D;
 
+        Animator anim;
         private void Start()
         {
             prop = new MaterialPropertyBlock();
             coll2D = GetComponent<Collider2D>();
+            anim = GetComponent<Animator>();
         }
 
         private void Update()
         {
             UpdateTexture();
+            //anim.SetFloat("move", )
         }
 
 
