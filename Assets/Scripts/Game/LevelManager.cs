@@ -26,8 +26,23 @@ namespace Game
 
         public int GetClosestPoint(Vector3 transformPosition)
         {
-            //todo find closest point to transform position
-            throw new NotImplementedException();
+
+            var closest = 0;
+            for (var i = 1; i < points.Count; i++)
+            {
+                if (Vector3.Distance(points[i], transformPosition) < Vector3.Distance(points[closest], transformPosition))
+                {
+                    closest = i;
+                }
+            }
+
+            return closest;
+
+        }
+
+        public void SetName(string name)
+        {
+            this.name = name;
         }
     }
 }

@@ -10,9 +10,14 @@ public class Patrol : MonoBehaviour
     private int patrolPathPositionIndex = -1;
 
 
-    private Character.Character enemy;
+    [SerializeField]private Character.Character enemy;
 
     // Update is called once per frame
+
+    private void Awake()
+    {
+        enemy = GetComponent<Character.Character>();
+    }
     void FixedUpdate()
     {
         Vector3 dir;
